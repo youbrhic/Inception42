@@ -1,0 +1,9 @@
+FROM    debian:bullseye
+
+RUN     apt update -y && apt upgrade -y
+
+RUN     apt  install redis-server -y
+
+COPY    ./tools /
+
+ENTRYPOINT ["bash", "/Redis_script.sh"]

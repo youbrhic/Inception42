@@ -1,0 +1,130 @@
+version: '3.7'
+
+services:
+  mariadb:
+    build: ./requirements/mariadb
+    image: mariadb
+    container_name: mariadb
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - Inception
+    restart: on-failure
+
+  wordpress:
+    build: ./requirements/wordpress
+    image: wordpress
+    container_name: wordpress
+    ports:
+      - "9000:9000"
+    volumes:
+      - wordpress-data:/var/www/site
+    depends_on:
+      - mariadb
+    env_file:
+      - .env
+    networks:
+      - Inception
+    restart: on-failure
+
+  nginx:
+    build: ./requirements/nginx
+    image: nginx
+    container_name: nginx
+    ports:
+      - "443:443"
+    volumes:
+      - wordpress-data:/var/www/site
+      - ./requirements/bonus/static_website/tools/:/var/www/html
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
+    networks:
+      - Inception
+    restart: on-failure
+
+  ftp:
+    build: ./requirements/bonus/ftp
+    image: ftp
+    container_name: ftp
+    ports:
+      - "60000-60005:60000-60005"
+      - "21:21"
+      - "20:20"
+    volumes:
+      - wordpress-data:/home/$USERFTP/ftp
+    depends_on:
+      - wordpress
+    env_file:
+      - .env
+    networks:
+      - Inception
+    restart: on-failure
+
+  static_website:
+    build: ./requirements/bonus/static_website
+    image: static_website
+    container_name: static_website
+    networks:
+      - Inception
+    restart: on-failure
+
+  Adminer:
+    container_name: Adminer
+    image: adminer
+    build: ./requirements/bonus/Adminer
+    ports:
+      - "7000:8080"
+    depends_on:
+      - mariadb
+    networks:
+      - Inception
+    restart: on-failure
+
+  redis:
+      container_name: redis
+      image: redis
+      build:  ./requirements/bonus/redis
+      ports:  
+        - "6379:6379"
+      depends_on:
+        - nginx
+      networks:
+        - Inception
+      restart: on-failure
+
+  portainer:
+    build: ./requirements/bonus/portainer
+    image: portainer
+    container_name: portainer
+    ports:
+      - "9001:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - Inception
+    restart: on-failure
+
+volumes:
+  mariadb-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $DB_VOLUME
+
+  wordpress-data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: $WP_VOLUME
+
+networks:
+  Inception:
+    driver: bridge
