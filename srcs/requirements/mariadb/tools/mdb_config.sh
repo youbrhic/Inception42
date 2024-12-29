@@ -1,14 +1,17 @@
 #!/bin/bash
 
-# start mariadb service
+# Start MariaDB service
 service mariadb start
 
-# wiating for mariadb service to start
+# Waiting for MariaDB service to start
 sleep 5
 
-# run sql commands with root
-mysql -uroot << EOF
+# Read passwords from secrets
+DB_ROOT_PASS=$(cat /run/secrets/db_root_pass)
+DB_USER_PASS=$(cat /run/secrets/db_user_pass)
 
+# Run SQL commands with root user
+mysql -uroot << EOF
 GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' IDENTIFIED BY '$DB_ROOT_PASS';
 FLUSH PRIVILEGES;
 
@@ -18,8 +21,8 @@ GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
 FLUSH PRIVILEGES;
 EOF
 
-# shtdown the mariadb service
+# Shutdown the MariaDB service
 mysqladmin -u root -p"$DB_ROOT_PASS" shutdown
 
-# start mariadb service , but this time in foreground
+# Start MariaDB service again, but this time in the foreground
 exec mysqld_safe --bind-address=0.0.0.0

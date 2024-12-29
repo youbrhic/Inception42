@@ -1,5 +1,8 @@
 #!/bin/bash
 
+DB_USER_PASS=`cat /run/secrets/db_user_pass`
+WP_ADMIN_PASS=`cat /run/secrets/wp_admin_pass`
+WP_NEW_USER_PASS=`cat /run/secrets/wp_user_pass`
 # Wait for the MariaDB container to be ready
 sleep 5
 
@@ -20,7 +23,9 @@ wp config set --allow-root DB_NAME "$DB_NAME"
 wp config set --allow-root DB_USER "$DB_USER"
 wp config set --allow-root DB_PASSWORD "$DB_USER_PASS"
 wp config set --allow-root DB_HOST "mariadb:3306"
-wp core install --url="$WP_DOMAINE_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMIN_USER" --admin_password="$WP_ADMIN_PASS" --admin_email="$WP_ADMIN_EMAIL" --allow-root 
+echo -e "################################## first :$WP_ADMIN_USER ,  $WP_ADMIN_PASS ################################# \n"
+wp core install --url="$WP_DOMAINE_NAME" --title="$WP_TITLE" --admin_user="$WP_ADMIN_USER" --admin_password="$WP_ADMIN_PASS" --admin_email="$WP_ADMIN_EMAIL" --allow-root
+echo -e "################################## second : $WP_NEW_USER_NAME , $WP_NEW_USER_PASS  ################################# \n"
 wp user create "$WP_NEW_USER_NAME" "$WP_NEW_USER_EMAIL" --user_pass="$WP_NEW_USER_PASS" --role="$WP_NEW_USER_ROLE" --allow-root
 
 ### configuration of redis ####

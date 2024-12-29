@@ -3,6 +3,9 @@
 # Start vsftpd service temporarily to initialize
 service vsftpd start
 
+# Read ftp password that created by docker secret
+PASSFTP=`cat /run/secrets/ftp_user_pass`
+
 # Add a new FTP user
 adduser --disabled-password --gecos "" "$USERFTP"
 
@@ -34,4 +37,4 @@ EOF
 service vsftpd stop
 
 # Start vsftpd 
-vsftpd
+exec vsftpd
