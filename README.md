@@ -59,8 +59,8 @@ The key objectives of this project are:
 | **MariaDB**       | Database | 3306  | Stores WordPress content |
 | **Redis**         | Cache for WordPress | 6379  | Optional but improves performance |
 | **FTP Server**    | File transfer for WordPress volume | 21/20 | Accessible with FTP client |
-| **Static Website**| Simple HTML/CSS/JS site | 8080  | Demonstrates static web hosting |
-| **Adminer**       | Database management | 8081  | Lightweight DB admin tool |
+| **Static Website**| Simple HTML/CSS/JS site | 8000  | Demonstrates static web hosting |
+| **Adminer**       | Database management | 8080  | Lightweight DB admin tool |
 | **Optional Service** | User-defined bonus | Custom | Must be justified during defense |
 
 ---
