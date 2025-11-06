@@ -8,5 +8,5 @@ RUN curl -L https://github.com/portainer/portainer/releases/download/2.9.3/porta
     && tar xzf /tmp/portainer.tar.gz -C /opt \
     && rm /tmp/portainer.tar.gz
 
-# Start Portainer
+# Start Portainer and connect to the local Docker daemon via the Unix socket.
 ENTRYPOINT ["/opt/portainer/portainer", "-H", "unix:///var/run/docker.sock"]

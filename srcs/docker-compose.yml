@@ -1,12 +1,10 @@
-version: '3'
+version: '3.7'
 
 services:
   mariadb:
     build: ./requirements/mariadb
-    image: mariadb
+    image: mariadb:youbrhic
     container_name: mariadb
-    ports:
-      - "3306:3306"
     env_file:
       - .env
     volumes:
@@ -20,10 +18,8 @@ services:
 
   wordpress:
     build: ./requirements/wordpress
-    image: wordpress
+    image: wordpress:youbrhic
     container_name: wordpress
-    ports:
-      - "9000:9000"
     volumes:
       - wordpress-data:/var/www/site
     depends_on:
@@ -40,7 +36,7 @@ services:
 
   nginx:
     build: ./requirements/nginx
-    image: nginx
+    image: nginx:youbrhic
     container_name: nginx
     ports:
       - "443:443"
@@ -57,7 +53,7 @@ services:
 
   ftp:
     build: ./requirements/bonus/ftp
-    image: ftp
+    image: ftp:youbrhic
     container_name: ftp
     ports:
       - "60000-60005:60000-60005"
@@ -77,15 +73,15 @@ services:
 
   static_website:
     build: ./requirements/bonus/static_website
-    image: static_website
+    image: static_website:youbrhic
     container_name: static_website
     networks:
       - Inception
     restart: on-failure
 
-  Adminer:
-    container_name: Adminer
-    image: adminer
+  adminer:
+    container_name: adminer
+    image: adminer:youbrhic
     build: ./requirements/bonus/Adminer
     ports:
       - "7000:8080"
@@ -97,7 +93,7 @@ services:
 
   redis:
       container_name: redis
-      image: redis
+      image: redis:youbrhic
       build:  ./requirements/bonus/redis
       ports:  
         - "6379:6379"
@@ -109,7 +105,7 @@ services:
 
   portainer:
     build: ./requirements/bonus/portainer
-    image: portainer
+    image: portainer:youbrhic
     container_name: portainer
     ports:
       - "9001:9000"
